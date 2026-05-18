@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Семейная Рисовалка — Хост</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body style="margin:0">
+<div class="host-app">
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+    <div class="host-title">Семейная Рисовалка</div>
+    <div id="host-round-badge" class="host-round-badge hidden"></div>
+  </div>
+
+  <div class="host-section">
+
+    <!-- ── Main area ── -->
+    <div class="host-main">
+
+      <!-- Lobby -->
+      <div id="h-lobby">
+        <div class="host-label">Ссылка для игроков</div>
+        <div id="h-join-url" class="host-url"></div>
+        <img id="h-qr" class="host-qr hidden" src="/qr.png" alt="QR">
+        <div class="host-label" style="margin-top:24px">Игроки</div>
+        <ul id="h-player-list" class="host-player-list"></ul>
+        <div style="margin-top:16px;font-size:1.2rem;color:#aaa">Ожидаем <span id="h-lobby-count">0</span> игроков (нужно минимум 5)</div>
+      </div>
+
+      <!-- Title writing -->
+      <div id="h-title-writing" class="hidden">
+        <div class="host-label">Раунд <span id="h-tw-round"></span></div>
+        <div class="host-big">Игроки придумывают названия</div>
+        <div class="host-progress">Готово: <span id="h-tw-prog">0</span>/<span id="h-tw-total">0</span></div>
+        <div class="progress-bar-wrap" style="max-width:400px">
+          <div id="h-tw-bar" class="progress-bar" style="width:0"></div>
+        </div>
+      </div>
+
+      <!-- Drawing -->
+      <div id="h-drawing" class="hidden">
+        <div class="host-big">Все рисуют</div>
+        <div class="host-progress">Готово: <span id="h-dr-prog">0</span>/<span id="h-dr-total">0</span></div>
+        <div class="progress-bar-wrap" style="max-width:400px">
+          <div id="h-dr-bar" class="progress-bar" style="width:0"></div>
+        </div>
+      </div>
+
+      <!-- Fake title writing -->
+      <div id="h-fake" class="hidden">
+        <img id="h-fake-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
+        <div class="host-progress">Придумывают ложные названия: <span id="h-fk-prog">0</span>/<span id="h-fk-total">0</span></div>
+        <div class="progress-bar-wrap" style="max-width:400px">
+          <div id="h-fk-bar" class="progress-bar" style="width:0"></div>
+        </div>
+      </div>
+
+      <!-- Voting -->
+      <div id="h-voting" class="hidden">
+        <img id="h-vote-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
+        <ul id="h-candidates" class="host-candidates" style="margin-bottom:16px"></ul>
+        <div class="host-progress">Проголосовали: <span id="h-vt-prog">0</span>/<span id="h-vt-total">0</span></div>
+        <div class="progress-bar-wrap" style="max-width:400px">
+          <div id="h-vt-bar" class="progress-bar" style="width:0"></div>
+        </div>
+      </div>
+
+      <!-- Revealing -->
+      <div id="h-revealing" class="hidden">
+        <img id="h-rev-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
+        <div id="h-reveal-items"></div>
+      </div>
+
+      <!-- Drawing complete -->
+      <div id="h-drawing-complete" class="hidden">
+        <img id="h-dc-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
+        <div id="h-dc-reveal"></div>
+      </div>
+
+      <!-- Round complete -->
+      <div id="h-round-complete" class="hidden">
+        <div class="host-big" id="h-rc-heading"></div>
+      </div>
+
+      <!-- Game complete -->
+      <div id="h-game-complete" class="hidden">
+        <div class="host-big">Игра окончена!</div>
+        <div id="h-gc-winner" style="font-size:2rem;font-weight:900;color:var(--primary);margin-bottom:20px"></div>
+      </div>
+
+    </div>
+
+    <!-- ── Side: scoreboard ── -->
+    <div class="host-side">
+      <div id="h-scoreboard-wrap" class="hidden">
+        <div class="host-label">Счёт</div>
+        <ul id="h-scoreboard" class="host-scoreboard"></ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="host.js"></script>
+</body>
+</html>

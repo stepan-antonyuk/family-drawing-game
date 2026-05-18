@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Семейная Рисовалка</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="player-app">
+
+  <div class="header">
+    <h1>Семейная Рисовалка</h1>
+    <div id="score-badge" class="score-badge hidden">0 очков</div>
+  </div>
+
+  <div id="error-global" class="error-msg"></div>
+
+  <!-- ── Lobby / join ── -->
+  <div id="screen-join" class="card">
+    <h2>Войти в игру</h2>
+    <input id="name-input" type="text" placeholder="Ваше имя" maxlength="20" autocomplete="off">
+    <div id="join-error" class="error-msg"></div>
+    <button id="join-btn" class="btn btn-primary">Войти</button>
+  </div>
+
+  <div id="screen-lobby" class="card hidden">
+    <h2>Ожидание игроков</h2>
+    <p>Игроков: <span id="lobby-count">0</span>/10 (минимум 5)</p>
+    <ul id="lobby-players" class="player-list" style="margin:12px 0"></ul>
+    <div id="lobby-error" class="error-msg"></div>
+    <button id="start-btn" class="btn btn-primary">Начать игру</button>
+  </div>
+
+  <!-- ── Title writing ── -->
+  <div id="screen-title" class="card hidden">
+    <h2>Раунд <span id="title-round">1</span>: Придумайте название</h2>
+    <p>Напишите название — его нарисует другой игрок.</p>
+    <input id="title-input" type="text" placeholder="Название рисунка..." maxlength="200" autocomplete="off">
+    <div id="title-error" class="error-msg"></div>
+    <button id="title-submit-btn" class="btn btn-primary">Отправить</button>
+    <div id="title-wait" class="hidden" style="margin-top:12px">
+      <div class="progress-line">Ждём остальных: <span id="title-prog">0</span>/<span id="title-total">0</span></div>
+      <div class="progress-bar-wrap"><div id="title-bar" class="progress-bar" style="width:0"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Drawing ── -->
+  <div id="screen-drawing" class="card hidden">
+    <h2>Нарисуйте:</h2>
+    <p id="drawing-assignment" style="font-size:1.2rem;font-weight:700;color:#333;margin-bottom:12px"></p>
+
+    <div class="toolbar">
+      <div class="color-palette" id="color-palette"></div>
+      <div class="size-row" id="size-row"></div>
+      <div class="tool-row">
+        <button id="undo-btn" class="btn btn-secondary btn-sm">↩ Отмена</button>
+        <button id="clear-btn" class="btn btn-secondary btn-sm">🗑 Очистить</button>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="drawing-canvas"></canvas>
+    </div>
+
+    <div id="drawing-error" class="error-msg"></div>
+    <button id="drawing-submit-btn" class="btn btn-primary" disabled>Отправить рисунок</button>
+    <div id="drawing-wait" class="hidden" style="margin-top:12px">
+      <div class="progress-line">Рисуют: <span id="drawing-prog">0</span>/<span id="drawing-total">0</span></div>
+      <div class="progress-bar-wrap"><div id="drawing-bar" class="progress-bar" style="width:0"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Fake title ── -->
+  <div id="screen-fake" class="card hidden">
+    <h2>Придумайте ложное название</h2>
+    <img id="fake-drawing" class="drawing-img" src="" alt="рисунок">
+    <div id="fake-spectator" class="spectator-notice hidden"></div>
+    <div id="fake-form">
+      <input id="fake-input" type="text" placeholder="Ложное название..." maxlength="200" autocomplete="off">
+      <div id="fake-error" class="error-msg"></div>
+      <button id="fake-submit-btn" class="btn btn-primary">Отправить</button>
+    </div>
+    <div id="fake-wait" class="hidden" style="margin-top:12px">
+      <div class="progress-line">Придумывают: <span id="fake-prog">0</span>/<span id="fake-total">0</span></div>
+      <div class="progress-bar-wrap"><div id="fake-bar" class="progress-bar" style="width:0"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Voting ── -->
+  <div id="screen-vote" class="card hidden">
+    <h2>Выберите правильное название</h2>
+    <img id="vote-drawing" class="drawing-img" src="" alt="рисунок">
+    <div id="vote-spectator" class="spectator-notice hidden"></div>
+    <div id="vote-form">
+      <div id="vote-candidates" class="candidate-list"></div>
+      <div id="vote-error" class="error-msg"></div>
+    </div>
+    <div id="vote-wait" class="hidden" style="margin-top:12px">
+      <div class="progress-line">Голосуют: <span id="vote-prog">0</span>/<span id="vote-total">0</span></div>
+      <div class="progress-bar-wrap"><div id="vote-bar" class="progress-bar" style="width:0"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Reveal ── -->
+  <div id="screen-reveal" class="card hidden">
+    <h2>Раскрытие</h2>
+    <img id="reveal-drawing" class="drawing-img" src="" alt="рисунок">
+    <div id="reveal-items"></div>
+  </div>
+
+  <!-- ── Drawing complete ── -->
+  <div id="screen-drawing-complete" class="card hidden">
+    <h2>Итоги рисунка</h2>
+    <img id="dc-drawing" class="drawing-img" src="" alt="рисунок">
+    <div id="dc-reveal-summary"></div>
+    <div id="dc-gain" style="margin:10px 0"></div>
+    <h3 style="margin-bottom:8px">Счёт</h3>
+    <ul id="dc-scoreboard" class="scoreboard"></ul>
+    <div id="dc-error" class="error-msg"></div>
+    <button id="dc-next-btn" class="btn btn-primary" style="margin-top:12px">Следующий рисунок</button>
+  </div>
+
+  <!-- ── Round complete ── -->
+  <div id="screen-round-complete" class="card hidden">
+    <h2 id="rc-heading">Конец раунда</h2>
+    <ul id="rc-scoreboard" class="scoreboard" style="margin-bottom:16px"></ul>
+    <div id="rc-error" class="error-msg"></div>
+    <button id="rc-next-btn" class="btn btn-primary">Следующий раунд</button>
+  </div>
+
+  <!-- ── Game complete ── -->
+  <div id="screen-game-complete" class="card hidden">
+    <h2>Игра окончена!</h2>
+    <div id="gc-winner" style="font-size:1.3rem;font-weight:700;margin-bottom:16px;color:var(--primary)"></div>
+    <ul id="gc-scoreboard" class="scoreboard" style="margin-bottom:16px"></ul>
+    <button id="gc-reset-btn" class="btn btn-primary">Сыграть снова</button>
+  </div>
+
+  <!-- ── Reset ── -->
+  <div class="reset-wrap">
+    <button id="reset-btn" class="btn btn-danger btn-sm hidden">Сбросить игру</button>
+  </div>
+
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+</body>
+</html>
