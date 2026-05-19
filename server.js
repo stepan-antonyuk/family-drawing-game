@@ -448,32 +448,32 @@ io.on('connection', socket => {
     if (!name || name.length < 1 || name.length > 20) {
       return err(socket, 'Имя должно быть от 1 до 20 символов');
     }
-    if (state.phase !== 'lobby') {
-      // allow rejoin if already registered
-      if (state.players[sid]) {
-        socket.emit('stateUpdate', publicView());
-        socket.emit('privateUpdate', privateView(sid));
-        return;
+    // if already registered, only allow rejoining under the same name
+    if (state.players[sid]) {
+      if (normalize(name) !== normalize(state.players[sid].name)) {
+        return err(socket, 'Вы уже зарегистрированы как «' + state.players[sid].name + '»');
       }
+      socket.emit('stateUpdate', publicView());
+      socket.emit('privateUpdate', privateView(sid));
+      return;
+    }
+
+    if (state.phase !== 'lobby') {
       return err(socket, 'Игра уже началась');
     }
-    if (playerCount() >= 10 && !state.players[sid]) {
+    if (playerCount() >= 10) {
       return err(socket, 'Максимум 10 игроков');
     }
 
-    // check name uniqueness (case-insensitive), allow same player to re-set name
+    // check name uniqueness (case-insensitive)
     const nameLower = normalize(name);
-    for (const [otherId, p] of Object.entries(state.players)) {
-      if (otherId !== sid && normalize(p.name) === nameLower) {
+    for (const p of Object.values(state.players)) {
+      if (normalize(p.name) === nameLower) {
         return err(socket, 'Это имя уже занято');
       }
     }
 
-    if (!state.players[sid]) {
-      state.players[sid] = { name, score: 0 };
-    } else {
-      state.players[sid].name = name;
-    }
+    state.players[sid] = { name, score: 0 };
 
     emitPublic();
     emitAllPrivate();
