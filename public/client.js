@@ -127,9 +127,12 @@ function initCanvas() {
 
 function resizeCanvas() {
   const w = Math.min(window.innerWidth - 48, 420);
+  if (canvas.width === w) return;
+  const snapshot = canvas.width > 0 ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
   canvas.width = w;
   canvas.height = w;
   fillWhite();
+  if (snapshot) ctx.putImageData(snapshot, 0, 0);
 }
 
 function fillWhite() {
