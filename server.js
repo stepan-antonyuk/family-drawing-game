@@ -4,7 +4,6 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
-const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -419,14 +418,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'player.html'));
-});
+app.use(express.static('public'));
 
 app.get('/host', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'host.html'));
+  res.sendFile('host.html', { root: 'public' });
 });
 
 // ── Socket.IO ────────────────────────────────────────────────────────────────

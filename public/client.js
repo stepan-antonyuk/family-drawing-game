@@ -1,6 +1,8 @@
 'use strict';
 
-const socket = io();
+const _ioScript = document.querySelector('script[src*="socket.io"]');
+const _socketPath = new URL('./', _ioScript.src).pathname;
+const socket = io({ path: _socketPath });
 
 // ── State ─────────────────────────────────────────────────────────────────────
 

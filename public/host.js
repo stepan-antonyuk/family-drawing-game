@@ -1,8 +1,14 @@
 'use strict';
 
-const socket = io();
+const _ioScript = document.querySelector('script[src*="socket.io"]');
+const _socketPath = new URL('./', _ioScript.src).pathname;
+const socket = io({ path: _socketPath });
+
+// Player URL: host page is at .../host, player page is one level up
+const PLAYER_URL = new URL('./', window.location.href).href;
 
 let pub = {};
+let _qrChecked = false;
 
 const $ = id => document.getElementById(id);
 
@@ -70,6 +76,15 @@ function renderRevealItems(containerId, items) {
   }
 }
 
+function checkQr() {
+  if (_qrChecked) return;
+  _qrChecked = true;
+  const qr = $('h-qr');
+  qr.onerror = () => qr.classList.add('hidden');
+  qr.onload = () => qr.classList.remove('hidden');
+  qr.src = new URL('qr.png', PLAYER_URL).href;
+}
+
 function render() {
   const { phase, round, playerNames, scores, submittedCount, totalCount,
           currentDrawingImageData, candidates, revealItems,
@@ -78,7 +93,6 @@ function render() {
   const names = playerNames || {};
   const sc = scores || {};
 
-  // Round badge
   const badge = $('host-round-badge');
   if (round) {
     badge.textContent = 'Раунд ' + round + '/3';
@@ -90,13 +104,8 @@ function render() {
   if (phase === 'lobby') {
     showOnly('h-lobby');
     $('h-scoreboard-wrap').classList.add('hidden');
-    const url = window.location.origin + '/';
-    $('h-join-url').textContent = url;
-    // check if qr.png exists (try to load it)
-    const qr = $('h-qr');
-    qr.onerror = () => qr.classList.add('hidden');
-    qr.onload = () => qr.classList.remove('hidden');
-    qr.src = '/qr.png?' + Date.now(); // bust cache once
+    $('h-join-url').textContent = PLAYER_URL;
+    checkQr();
     setText('h-lobby-count', Object.keys(names).length);
     const ul = $('h-player-list');
     ul.innerHTML = '';
