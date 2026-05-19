@@ -454,6 +454,11 @@ socket.on('stateUpdate', data => {
   if (data.phase === 'voting' && prevPhase !== 'voting') {
     $('vote-candidates').innerHTML = '';
   }
+  // Clear title input at the start of each round
+  if (data.phase === 'titleWriting' && prevPhase !== 'titleWriting') {
+    $('title-input').value = '';
+    setError('title-error', '');
+  }
   // Clear fake title input between drawings
   if (data.phase === 'fakeTitleWriting' && prevPhase !== 'fakeTitleWriting') {
     $('fake-input').value = '';
