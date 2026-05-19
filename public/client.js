@@ -454,6 +454,11 @@ socket.on('stateUpdate', data => {
   if (data.phase === 'voting' && prevPhase !== 'voting') {
     $('vote-candidates').innerHTML = '';
   }
+  // Clear fake title input between drawings
+  if (data.phase === 'fakeTitleWriting' && prevPhase !== 'fakeTitleWriting') {
+    $('fake-input').value = '';
+    setError('fake-error', '');
+  }
   // Reset canvas when entering drawing phase
   if (data.phase === 'drawing' && prevPhase !== 'drawing') {
     resetCanvas();
