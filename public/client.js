@@ -277,7 +277,7 @@ function render() {
       ul.appendChild(li);
     }
     const count = Object.keys(playerNames || {}).length;
-    $('start-btn').disabled = count < 5;
+    $('start-btn').disabled = count < 3;
     return;
   }
 

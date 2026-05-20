@@ -484,7 +484,7 @@ io.on('connection', socket => {
   socket.on('startGame', () => {
     if (state.phase !== 'lobby') return err(socket, 'Игра уже идёт');
     if (!state.players[sid]) return err(socket, 'Вы не в игре');
-    if (playerCount() < 5) return err(socket, 'Нужно минимум 5 игроков');
+    if (playerCount() < 3) return err(socket, 'Нужно минимум 3 игрока');
     startGame();
   });
 
