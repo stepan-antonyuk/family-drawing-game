@@ -25,11 +25,6 @@ function setText(id, text) {
   $(id).textContent = text;
 }
 
-function setProgress(progId, totalId, barId, done, total) {
-  setText(progId, done);
-  setText(totalId, total);
-  $(barId).style.width = (total ? (done / total * 100) : 0) + '%';
-}
 
 function renderScoreboard(scores, names, gains) {
   const ul = $('h-scoreboard');
@@ -49,6 +44,32 @@ function renderScoreboard(scores, names, gains) {
     ul.appendChild(li);
   }
   $('h-scoreboard-wrap').classList.remove('hidden');
+}
+
+function renderPlayerChips(names, completedSids, spectatorSids) {
+  const wrap = $('h-player-chips');
+  wrap.innerHTML = '';
+  const completed = new Set(completedSids || []);
+  const spectators = new Set(spectatorSids || []);
+  for (const sid of Object.keys(names)) {
+    const chip = document.createElement('div');
+    if (spectators.has(sid)) {
+      chip.className = 'h-chip h-chip-spec';
+      chip.textContent = names[sid] + ' —';
+    } else if (completed.has(sid)) {
+      chip.className = 'h-chip h-chip-done';
+      chip.textContent = names[sid] + ' ✓';
+    } else {
+      chip.className = 'h-chip h-chip-wait';
+      chip.textContent = names[sid] + ' ○';
+    }
+    wrap.appendChild(chip);
+  }
+  wrap.classList.remove('hidden');
+}
+
+function hidePlayerChips() {
+  $('h-player-chips').classList.add('hidden');
 }
 
 function renderRevealItems(containerId, items) {
@@ -120,14 +141,14 @@ function render() {
   if (phase === 'titleWriting') {
     showOnly('h-title-writing');
     setText('h-tw-round', round);
-    setProgress('h-tw-prog','h-tw-total','h-tw-bar', submittedCount||0, totalCount||0);
+    renderPlayerChips(names, pub.completedSids, []);
     renderScoreboard(sc, names, null);
     return;
   }
 
   if (phase === 'drawing') {
     showOnly('h-drawing');
-    setProgress('h-dr-prog','h-dr-total','h-dr-bar', submittedCount||0, totalCount||0);
+    renderPlayerChips(names, pub.completedSids, []);
     renderScoreboard(sc, names, null);
     return;
   }
@@ -135,7 +156,7 @@ function render() {
   if (phase === 'fakeTitleWriting') {
     showOnly('h-fake');
     $('h-fake-img').src = currentDrawingImageData || '';
-    setProgress('h-fk-prog','h-fk-total','h-fk-bar', submittedCount||0, totalCount||0);
+    renderPlayerChips(names, pub.completedSids, pub.spectatorSids);
     renderScoreboard(sc, names, null);
     return;
   }
@@ -150,7 +171,7 @@ function render() {
       li.textContent = title;
       ul.appendChild(li);
     }
-    setProgress('h-vt-prog','h-vt-total','h-vt-bar', submittedCount||0, totalCount||0);
+    renderPlayerChips(names, pub.completedSids, pub.spectatorSids);
     renderScoreboard(sc, names, null);
     return;
   }
@@ -159,6 +180,7 @@ function render() {
     showOnly('h-revealing');
     $('h-rev-img').src = currentDrawingImageData || '';
     renderRevealItems('h-reveal-items', revealItems || []);
+    hidePlayerChips();
     renderScoreboard(sc, names, drawingGains);
     return;
   }
@@ -167,6 +189,7 @@ function render() {
     showOnly('h-drawing-complete');
     $('h-dc-img').src = currentDrawingImageData || '';
     renderRevealItems('h-dc-reveal', revealItems || []);
+    hidePlayerChips();
     renderScoreboard(sc, names, drawingGains);
     return;
   }
@@ -174,6 +197,7 @@ function render() {
   if (phase === 'roundComplete') {
     showOnly('h-round-complete');
     setText('h-rc-heading', 'Конец раунда ' + round);
+    hidePlayerChips();
     renderScoreboard(sc, names, null);
     return;
   }
@@ -183,6 +207,7 @@ function render() {
     const sorted = Object.keys(sc).sort((a, b) => sc[b] - sc[a]);
     const winner = sorted[0];
     $('h-gc-winner').textContent = winner ? 'Победитель: ' + (names[winner] || '?') : '';
+    hidePlayerChips();
     renderScoreboard(sc, names, null);
     return;
   }

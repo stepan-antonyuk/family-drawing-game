@@ -110,14 +110,20 @@ function publicView() {
   if (phase === 'titleWriting') {
     view.submittedCount = Object.keys(state.titles).length;
     view.totalCount = playerCount();
+    view.completedSids = Object.keys(state.titles);
+    view.spectatorSids = [];
   } else if (phase === 'drawing') {
     view.submittedCount = Object.keys(state.drawings).length;
     view.totalCount = playerCount();
+    view.completedSids = Object.keys(state.drawings);
+    view.spectatorSids = [];
   } else if (phase === 'fakeTitleWriting') {
     const eligible = Object.keys(state.players).filter(s => s !== state.currentTitleAuthor);
     view.submittedCount = Object.keys(state.fakeTitles).length;
     view.totalCount = eligible.length;
     view.currentDrawingImageData = state.drawings[state.currentDrawer] || null;
+    view.completedSids = Object.keys(state.fakeTitles);
+    view.spectatorSids = [state.currentTitleAuthor];
   } else if (phase === 'voting') {
     const eligible = Object.keys(state.players).filter(
       s => s !== state.currentTitleAuthor && s !== state.currentDrawer
@@ -126,6 +132,8 @@ function publicView() {
     view.totalCount = eligible.length;
     view.currentDrawingImageData = state.drawings[state.currentDrawer] || null;
     view.candidates = state.candidates.map(c => c.title);
+    view.completedSids = Object.keys(state.votes);
+    view.spectatorSids = [state.currentTitleAuthor, state.currentDrawer];
   } else if (phase === 'revealing') {
     view.currentDrawingImageData = state.drawings[state.currentDrawer] || null;
     view.candidates = state.candidates.map(c => c.title);

@@ -480,4 +480,20 @@ input[type=text]:focus, textarea:focus { border-color: var(--primary); }
   margin-bottom: 16px;
 }
 
+#h-player-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.h-chip {
+  padding: 8px 18px;
+  border-radius: 24px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.h-chip-done { background: #1a3d2a; color: #4ade80; }
+.h-chip-wait { background: #222; color: #666; }
+.h-chip-spec { background: #1a1a1a; color: #444; font-style: italic; }
+
 .hidden { display: none !important; }
