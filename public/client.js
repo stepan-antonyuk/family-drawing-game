@@ -360,12 +360,23 @@ function render() {
       $('vote-spectator').textContent = isTitleAuthor
         ? 'Ваше название: «' + (correctTitle || '') + '»'
         : 'Ваш рисунок. Правильное название: «' + (correctTitle || '') + '»';
-      $('vote-form').classList.add('hidden');
       $('vote-wait').classList.remove('hidden');
       const pct = totalCount ? (submittedCount / totalCount * 100) : 0;
       setText('vote-prog', submittedCount);
       setText('vote-total', totalCount);
       $('vote-bar').style.width = pct + '%';
+      // show candidates as read-only (no click handler)
+      $('vote-form').classList.remove('hidden');
+      const list = $('vote-candidates');
+      if (list.children.length === 0 && candidates) {
+        for (const title of candidates) {
+          const btn = document.createElement('button');
+          btn.className = 'candidate-btn';
+          btn.textContent = title;
+          btn.disabled = true;
+          list.appendChild(btn);
+        }
+      }
     } else {
       $('vote-spectator').classList.add('hidden');
       if (submitted) {
