@@ -293,6 +293,8 @@ function render() {
       setText('title-total', totalCount);
       $('title-bar').style.width = pct + '%';
     } else {
+      $('title-input').disabled = false;
+      $('title-submit-btn').disabled = false;
       $('title-wait').classList.add('hidden');
     }
     return;
@@ -309,6 +311,7 @@ function render() {
       setText('drawing-total', totalCount);
       $('drawing-bar').style.width = pct + '%';
     } else {
+      $('drawing-submit-btn').disabled = !hasDrawn;
       $('drawing-wait').classList.add('hidden');
     }
     return;
