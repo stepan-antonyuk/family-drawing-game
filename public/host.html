@@ -41,26 +41,33 @@
       </div>
 
       <!-- Fake title writing -->
-      <div id="h-fake" class="hidden">
-        <img id="h-fake-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
+      <div id="h-fake" class="hidden h-split-layout">
+        <img id="h-fake-img" class="h-split-left" src="" alt="рисунок">
+        <div class="h-split-right"></div>
       </div>
 
       <!-- Voting -->
-      <div id="h-voting" class="hidden">
-        <img id="h-vote-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
-        <ul id="h-candidates" class="host-candidates" style="margin-bottom:16px"></ul>
+      <div id="h-voting" class="hidden h-split-layout">
+        <img id="h-vote-img" class="h-split-left" src="" alt="рисунок">
+        <div class="h-split-right">
+          <ul id="h-candidates" class="host-candidates"></ul>
+        </div>
       </div>
 
       <!-- Revealing -->
-      <div id="h-revealing" class="hidden">
-        <img id="h-rev-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
-        <div id="h-reveal-items"></div>
+      <div id="h-revealing" class="hidden h-split-layout">
+        <img id="h-rev-img" class="h-split-left" src="" alt="рисунок">
+        <div class="h-split-right">
+          <div id="h-reveal-items"></div>
+        </div>
       </div>
 
       <!-- Drawing complete -->
-      <div id="h-drawing-complete" class="hidden">
-        <img id="h-dc-img" class="host-drawing" src="" alt="рисунок" style="margin-bottom:20px">
-        <div id="h-dc-reveal"></div>
+      <div id="h-drawing-complete" class="hidden h-split-layout">
+        <img id="h-dc-img" class="h-split-left" src="" alt="рисунок">
+        <div class="h-split-right">
+          <div id="h-dc-reveal"></div>
+        </div>
       </div>
 
       <!-- Round complete -->
